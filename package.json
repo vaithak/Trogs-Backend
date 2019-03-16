@@ -1,0 +1,16 @@
+{
+  "name": "trogs-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Vaibhav Thakkar",
+  "license": "MIT",
+  "dependencies": {
+    "@okta/jwt-verifier": "0.0.14",
+    "cors": "^2.8.5",
+    "express": "^4.16.4"
+  }
+}
