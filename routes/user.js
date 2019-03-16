@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Log a user out
 router.get("/", (req, res, next) => {
-  res.send("Hello")
+    res.json(req.jwt);
 });
 
 

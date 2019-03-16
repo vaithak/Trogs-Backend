@@ -26,7 +26,9 @@ function authenticationRequired(req, res, next) {
 
   return oktaJwtVerifier.verifyAccessToken(accessToken)
     .then((jwt) => {
-      req.jwt = jwt;
+      req.jwt   = jwt;
+      req.uid   = jwt['claims']['uid'];
+      req.email = jwt['claims']['sub'];
       next();
     })
     .catch((err) => {
