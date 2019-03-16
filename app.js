@@ -5,6 +5,19 @@ const app          = express();
 const config       = require('./config');
 const userRouter   = require("./routes/user");
 
+// connect to mongodb
+const mongoose     = require('mongoose');
+mongoose.promise   = global.promise;
+mongoose.connect(config.db.dbURI,{ useNewUrlParser: true }, function(err) {
+  if(err)
+  {
+    throw err;
+    process.exit(0);
+  }
+
+  console.log('connected to mongodb');
+});
+
 /*
  * For local testing only!  Enables CORS for all domains
  */

@@ -1,5 +1,7 @@
 const config = require('./config');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
+const User = require('./models/userModel');
+var md5 = require('md5');
 
 const oktaJwtVerifier = new OktaJwtVerifier({
   issuer: config['okta']['issuerAuthServer'],
@@ -26,10 +28,25 @@ function authenticationRequired(req, res, next) {
 
   return oktaJwtVerifier.verifyAccessToken(accessToken)
     .then((jwt) => {
-      req.jwt   = jwt;
-      req.uid   = jwt['claims']['uid'];
-      req.email = jwt['claims']['sub'];
-      next();
+      req.jwt      = jwt;
+      req.uid      = jwt['claims']['uid'];
+      req.username = jwt['claims']['sub'];
+
+      User.findOne({uid: req.uid}).then(function(currentUser){
+        if(!currentUser){
+          // User doesn't exist in DB
+          new User({
+            uid          : req.uid,
+            username     : req.username,
+            thumbnailUrl : "https://www.gravatar.com/avatar/" + md5(req.uid) + "?d=robohash"
+        }).save().then((newUser) => {
+          next(); 
+        });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send(err.message);
+      });
     })
     .catch((err) => {
       res.status(401).send(err.message);
