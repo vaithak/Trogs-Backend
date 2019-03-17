@@ -4,6 +4,7 @@ const authRequired = require('./auth');
 const app          = express();
 const config       = require('./config');
 const userRouter   = require("./routes/user");
+const logsRouter   = require("./routes/logs");
 const bodyParser   = require('body-parser');
  
 // parse application/x-www-form-urlencoded
@@ -38,6 +39,7 @@ app.use(authRequired);
 
 // Routes
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/logs", logsRouter);
 
 // 404 on missing routes
 app.get('/*', function(req, res, next){

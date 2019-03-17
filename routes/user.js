@@ -20,14 +20,14 @@ router.get("/", (req, res, next) => {
 });
 
 // Search a user's friend by pattern of his username
-router.get("/friendsearch/:friendPattern", (req, res, next) => {
-    let friendPattern = req.params.friendPattern;
+router.get("/friendsearch", (req, res, next) => {
+    let friendPattern = req.query.friendPattern;
     res.status(200).send( (req.userFriends).map(friend => friend.username.includes(friendPattern)) );
 });
 
 // Search a user by his username
-router.get("/searchuser/:username", (req, res, next) => {
-    let username = req.params.username;
+router.get("/searchuser", (req, res, next) => {
+    let username = req.query.uname;
     User.findOne({"username": username}).then((user) => {
         if(user){
             res.json({
@@ -45,8 +45,8 @@ router.get("/searchuser/:username", (req, res, next) => {
 });
 
 // Add a user's friend
-router.get("/addfriend/:friendusername", (req, res, next) => {
-    let friendUsername = req.params.friendUsername;
+router.get("/addfriend", (req, res, next) => {
+    let friendUsername = req.query.uname;
     User.findOne({"username": friendUsername}).then((user) => {
         if(user){
             let newFriends = req.userFriends;
@@ -65,22 +65,6 @@ router.get("/addfriend/:friendusername", (req, res, next) => {
     .catch((err) => {
         res.status(500).send(err.message);
     });
-});
-
-// Delete a user's log if it's present else do nothing
-router.get("/logs/delete/:uniqRefId", (req, res, next) => {
-    let uniqRefId = req.params.uniqueRefId;
-    if (req.userLogs.includes(uniqRefId)){
-        Logs.deleteOne({"uniqRefId": uniqRefId}).then(() => {
-            res.status(200).send("User deleted successfully!");
-        })
-        .catch((err) => {
-            res.status(500).send(err.message);
-        });
-    }
-    else{
-        res.send("No such user exist");
-    }
 });
 
 module.exports = router;
