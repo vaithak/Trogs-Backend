@@ -20,7 +20,7 @@ router.get("/", (req, res, next) => {
 router.get("/logs/delete/:uniqRefId", (req, res, next) => {
     var uniqRefId = req.params.uniqueRefId;
     for (var i in req.userLogs){
-      if(req.userLogs[i].uniqRefId == uniqRefId){
+      if(req.userLogs[i].uniqRefId.valueOf() == uniqRefId.valueOf()){
         Logs.deleteOne({
           "uniqRefId": uniqRefId
         });
