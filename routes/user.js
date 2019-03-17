@@ -7,9 +7,9 @@ router.get("/", (req, res, next) => {
     res.json(req.jwt);
 });
 
-// Delete a user's log if it's present else do nothing (not even returning error)
-router.get("/logs/delete/:logId", (req, res, next) => {
-    var logId = req.params.logId;
+// Delete a user's log if it's present else do nothing
+router.get("/logs/delete/:uniqRefId", (req, res, next) => {
+    var uniqRefId = req.params.uniqueRefId;
     res.json(logId);
 });
 
