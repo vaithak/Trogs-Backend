@@ -1,7 +1,7 @@
 const config = require('./config');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 const User = require('./models/userModel');
-var md5 = require('md5');
+const md5 = require('md5');
 
 const oktaJwtVerifier = new OktaJwtVerifier({
   issuer: config['okta']['issuerAuthServer'],
@@ -42,6 +42,9 @@ function authenticationRequired(req, res, next) {
         }).save().then((newUser) => {
           next(); 
         });
+        }
+        else{
+          next();
         }
       })
       .catch((err) => {
