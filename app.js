@@ -27,7 +27,7 @@ app.use(cors());
 app.use(authRequired);
 
 // Routes
-app.use("/user", userRouter);
+app.use("api/v1/user", userRouter);
 
 // // 404 on missing routes
 app.get('/*', function(req, res, next){
