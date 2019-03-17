@@ -3,8 +3,18 @@ Backend repository for Trogs application for Oktane Hackathon.
 
 ### How to setup ?
   1) Clone this repo and run -> `npm install`.  
-  2) Download config.js into this cloned folder from [here](https://send.firefox.com/download/c48aacce84/#M7E7wYTEZWiACVjpjAR8BQ)  
-  3) The setup is complete but follow steps for usage.  
+  2) Download config.js into this cloned folder from [here](https://send.firefox.com/download/dfa07d06c5/#6c9cxmZbCZD9mJQg6x7ueQ)  
+  3) Start mongodb instance by `sudo mongod` command.  
+  4) Run mongo command in another terminal and then run these commands at the first time, see DB_USER and DB_PWD from config.js    
+  ```
+    use trogsDb
+    db.createUser({
+       user: "DB_USER",
+       pwd:  "DB_PWD",
+       roles: ["readWrite", "dbAdmin"]
+    })
+ ```  
+ 5) Now you can close the mongo terminal but make sure the mongo server is running, i.e the mongod service.  
 
 ### Usage: 
 
