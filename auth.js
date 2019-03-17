@@ -44,6 +44,9 @@ function authenticationRequired(req, res, next) {
         });
         }
         else{
+          req.userLogs    = currentUser['logs'];
+          req.userFriends = currentUser['friends'];
+          req.profileURL  = currentUser['thumbnailUrl']; 
           next();
         }
       })
@@ -52,6 +55,7 @@ function authenticationRequired(req, res, next) {
       });
     })
     .catch((err) => {
+      console.log(req.connection.localAddress)
       res.status(401).send(err.message);
     });
 }
