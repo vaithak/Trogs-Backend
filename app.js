@@ -39,9 +39,8 @@ app.use(authRequired);
 // Routes
 app.use("/api/v1/user", userRouter);
 
-// // 404 on missing routes
+// 404 on missing routes
 app.get('/*', function(req, res, next){
-    console.log(req.connection.localAddress)
     res.status(404).send("Route Not Found");
 });
 

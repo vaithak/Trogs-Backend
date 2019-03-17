@@ -40,13 +40,16 @@ function authenticationRequired(req, res, next) {
             username     : req.username,
             thumbnailUrl : "https://www.gravatar.com/avatar/" + md5(req.uid) + "?d=robohash"
         }).save().then((newUser) => {
+          req.userLogs     = newUser['logs'];
+          req.userFriends  = newUser['friends'];
+          req.thumbnailUrl = newUser['thumbnailUrl']; 
           next(); 
         });
         }
         else{
-          req.userLogs    = currentUser['logs'];
-          req.userFriends = currentUser['friends'];
-          req.profileURL  = currentUser['thumbnailUrl']; 
+          req.userLogs     = currentUser['logs'];
+          req.userFriends  = currentUser['friends'];
+          req.thumbnailUrl = currentUser['thumbnailUrl']; 
           next();
         }
       })
