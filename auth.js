@@ -1,7 +1,7 @@
 const config = require('./config');
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 const User = require('./models/userModel');
-var md5 = require('md5');
+const md5 = require('md5');
 
 const oktaJwtVerifier = new OktaJwtVerifier({
   issuer: config['okta']['issuerAuthServer'],
@@ -40,8 +40,17 @@ function authenticationRequired(req, res, next) {
             username     : req.username,
             thumbnailUrl : "https://www.gravatar.com/avatar/" + md5(req.uid) + "?d=robohash"
         }).save().then((newUser) => {
+          req.userLogs     = newUser['logs'];
+          req.userFriends  = newUser['friends'];
+          req.thumbnailUrl = newUser['thumbnailUrl']; 
           next(); 
         });
+        }
+        else{
+          req.userLogs     = currentUser['logs'];
+          req.userFriends  = currentUser['friends'];
+          req.thumbnailUrl = currentUser['thumbnailUrl']; 
+          next();
         }
       })
       .catch((err) => {
@@ -49,6 +58,7 @@ function authenticationRequired(req, res, next) {
       });
     })
     .catch((err) => {
+      console.log(req.connection.localAddress)
       res.status(401).send(err.message);
     });
 }

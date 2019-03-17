@@ -16,6 +16,27 @@ router.get("/", (req, res, next) => {
     });
 });
 
+// Search a user's friend by prefix of a username
+router.get("/friendsearch/:friendPrefix", (req, res, next) => {
+    let friendPrefix = req.params.friendPrefix;
+    // Search user's friends by prefix in req.userFriends
+    res.send("Hello");
+});
+
+// Search a user's friend by prefix of a username
+router.get("/searchuser/:username", (req, res, next) => {
+    let friendPrefix = req.params.friendPrefix;
+    // Search user's friends by prefix in req.userFriends
+    res.send("Hello");
+});
+
+// Add user's friend
+router.get("/addfriend/:friendusername", (req, res, next) => {
+    let friendPrefix = req.params.friendPrefix;
+    // Search user's friends by prefix in req.userFriends
+    res.send("Hello");
+});
+
 // Delete a user's log if it's present else do nothing
 router.get("/logs/delete/:uniqRefId", (req, res, next) => {
     var uniqRefId = req.params.uniqueRefId;

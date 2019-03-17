@@ -1,9 +1,16 @@
 const express      = require('express');
-var   cors         = require('cors');
-var   authRequired = require('./auth');
+const cors         = require('cors');
+const authRequired = require('./auth');
 const app          = express();
 const config       = require('./config');
 const userRouter   = require("./routes/user");
+const bodyParser   = require('body-parser');
+ 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+ 
+// parse application/json
+app.use(bodyParser.json());
 
 // connect to mongodb
 const mongoose     = require('mongoose');
@@ -16,6 +23,9 @@ mongoose.connect(config.db.dbURI,{ useNewUrlParser: true }, function(err) {
   }
 
   console.log('connected to mongodb');
+})
+.catch((err) => {
+  console.log("Could not connect to MongoDB: " + err);
 });
 
 /*
@@ -27,14 +37,14 @@ app.use(cors());
 app.use(authRequired);
 
 // Routes
-app.use("api/v1/user", userRouter);
+app.use("/api/v1/user", userRouter);
 
-// // 404 on missing routes
+// 404 on missing routes
 app.get('/*', function(req, res, next){
     res.status(404).send("Route Not Found");
 });
 
 // Starting the server
 app.listen(config['app']['port'], () => {
-  console.log('Serve Ready on port ' + config['app']['port']);
+  console.log('Server Ready on port ' + config['app']['port']);
 });
