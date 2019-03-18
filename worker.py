@@ -4,17 +4,23 @@ import json
 import pymongo
 import bson
 import hashlib
+import configparser
+
+# Initializing configurations
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 # Handling JSON data received in request
 def handleRequest(msgJSON):
-    client = pymongo.MongoClient('mongodb://trogsDbUser:letscheckthisoutmongo@127.0.0.1:27017/trogsDb')
-    logsDb   = client["trogsDb"]["logs"]
-    usersDb  = client["trogsDb"]["users"]
+    client  = pymongo.MongoClient(config['DB']['dbUrl'])
+    logsDb  = client["trogsDb"]["logs"]
+    usersDb = client["trogsDb"]["users"]
 
     # Currently hard coded for testing
     title    = "Testing log title: " + msgJSON['logData'][0:6]
     amount   = 1000
     msgRefId = "123456789"
+    category = "Personal"
 
     boolPersonal = True if msgJSON['boolPersonal'] == "true" else False
     newId        = bson.objectid.ObjectId()
@@ -30,7 +36,8 @@ def handleRequest(msgJSON):
         'secUsername' : msgJSON['secUsername'],
         'title'       : title,
         'amount'      : amount,
-        'msgRefId'    : msgRefId
+        'msgRefId'    : msgRefId,
+        'category'    : category
     }
 
     result1 = logsDb.insert_one(saveLogData)

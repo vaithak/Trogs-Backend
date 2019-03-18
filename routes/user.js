@@ -14,7 +14,8 @@ router.get("/", (req, res, next) => {
             'title'        : element.title,
             'uniqueRefId'  : element.uniqRefId,
             'boolPersonal' : element.boolPersonal,
-            'secUsername'  : element.secUsername
+            'secUsername'  : element.secUsername,
+            'category'     : element.category
         }));
         let jsonResult = {
             "username"     : req.username,

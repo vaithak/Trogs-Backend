@@ -10,7 +10,8 @@ const logsSchema = new Schema({
     secUsername : {type : String, "default": ""},   // If this transaction is between two friends
     title       : {type : String, required: true},  // Title to be shown on the user's dashboard
     amount      : {type : Number, required: true},  // Amount credited/Paid -> (-ve), debited/Received -> (+ve)
-    completeLog : {type : String, required: true}   // Complete message as it is
+    completeLog : {type : String, required: true},   // Complete message as it is
+    category    : {type : String, required: true, enum: ["Bank", "E-Wallet", "Personal", "Other"]}
 });
 
 const Logs = mongoose.model('logs', logsSchema);
