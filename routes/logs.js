@@ -22,33 +22,42 @@ router.get("/delete", (req, res, next) => {
 // Adding a log
 router.post("/new", (req,res,next) => {
     let msgData = {
-        logData: req.body.msg,
-        uid    : req.uid
+        logData     : req.body.msg,
+        uid         : req.uid,
+        boolPersonal: req.body.boolPersonal,
+        secUsername : req.body.secUsername
     }
 
-    amqp.connect('amqp://localhost', (err, conn) => {
-        if(err){
-            res.status(500).send(err.message);
-        }
-        else{
-            conn.createChannel((err, ch) => {
-                if(err){
-                    console.log(err.message)
-                    res.status(500).send(err.message);
-                    conn.close();
-                }
-                else{
-                    let q   = 'task_queue';
-                    ch.assertQueue(q, {durable: true});
-                    let msg = JSON.stringify(msgData);
-                    ch.sendToQueue(q, Buffer.from(msg), {persistent: true});
-                    console.log(" [x] Sent " + msg);
-                    res.status(200).send("Log sent for processing.");
-                    setTimeout(function () { conn.close(); }, 500);
-                }
-            });
-        }
-    });
+    if (msgData.logData.length == 0) {
+        res.status(400).send("Empty message!");
+    }
+    else if(msgData.boolPersonal == "true" && ( (msgData.secUsername.length == 0) || (!req.userFriends.some(el => el.username == msgData.secUsername ))) ){
+        res.status(400).send("Inalid secondary username!");
+    }
+    else{
+        amqp.connect('amqp://localhost', (err, conn) => {
+            if(err){
+                res.status(500).send(err.message);
+            }
+            else{
+                conn.createChannel((err, ch) => {
+                    if(err){
+                        console.log(err.message)
+                        res.status(500).send(err.message);
+                        conn.close();
+                    }
+                    else{
+                        let q = 'task_queue';
+                        ch.assertQueue(q, {durable: true});
+                        let msg = JSON.stringify(msgData);
+                        ch.sendToQueue(q, Buffer.from(msg), {persistent: true});
+                        res.status(200).send("Log sent for processing.");
+                        setTimeout(function () { conn.close(); }, 500);
+                    }
+                });
+            }
+        });
+    }
 });
 
 module.exports = router;

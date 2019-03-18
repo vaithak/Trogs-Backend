@@ -7,7 +7,7 @@ const logsSchema = new Schema({
     msgRefId    : {type : String, "default": ""},   // Reference/Transaction/Txn Id of Transaction log if present in message.
     genUserId   : {type : String, required: true},  // UID of the person on which this is transaction was generated
     boolPersonal: {type : Boolean,required: true},  // Boolean to check if this transaction is personal or between 2 users.
-    secUserId   : {type : String, "default": ""},   // If this transaction
+    secUsername : {type : String, "default": ""},   // If this transaction is between two friends
     title       : {type : String, required: true},  // Title to be shown on the user's dashboard
     amount      : {type : Number, required: true},  // Amount credited/Paid -> (-ve), debited/Received -> (+ve)
     completeLog : {type : String, required: true}   // Complete message as it is
