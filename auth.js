@@ -58,7 +58,6 @@ function authenticationRequired(req, res, next) {
       });
     })
     .catch((err) => {
-      console.log(req.connection.localAddress)
       res.status(401).send(err.message);
     });
 }
