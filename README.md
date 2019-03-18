@@ -40,3 +40,9 @@ Backend repository for Trogs application for Oktane Hackathon.
 
 4) Then you can manipulate test.sh to test different API's by changing the url and type of request. You can read the [docs](https://httpie.org/doc) of httpie for help.   
 
+### TODO
+
+=> Implement search API  
+=> Dockerize application  
+=> Load Balancing between node instances  
+=> Add categories to logs  
