@@ -24,12 +24,13 @@ router.post("/new", (req,res,next) => {
     let msgData = {
         logData     : req.body.msg,
         uid         : req.uid,
+        userLogs    : req.userLogs,
         boolPersonal: req.body.boolPersonal,
         secUsername : req.body.secUsername
     }
 
-    if (msgData.logData.length == 0) {
-        res.status(400).send("Empty message!");
+    if (msgData.logData.length == 0 || (msgData.boolPersonal!="true" && msgData.boolPersonal!="false")) {
+        res.status(400).send("Invalid request!");
     }
     else if(msgData.boolPersonal == "true" && ( (msgData.secUsername.length == 0) || (!req.userFriends.some(el => el.username == msgData.secUsername ))) ){
         res.status(400).send("Inalid secondary username!");

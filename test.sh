@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Replace this accessToken with refreshed one
-accessToken="eyJraWQiOiJjcFF2WUpNaElhM1dBNFN2Zy1pSGdtdHJXRndVX2V1WHFsTVpsU3FWSXVrIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULnN2LXNzbXhFOE5mUURRR2hhZWM0aVdWTm9Rd1ZCUXlINkVkS3BRYThfdlUiLCJpc3MiOiJodHRwczovL2Rldi03MTIzMjEub2t0YXByZXZpZXcuY29tL29hdXRoMi9kZWZhdWx0IiwiYXVkIjoiYXBpOi8vZGVmYXVsdCIsImlhdCI6MTU1MjkxMTE0OSwiZXhwIjoxNTUyOTE0NzQ5LCJjaWQiOiIwb2FqcjdnazE3NUN6Q1dCcjBoNyIsInVpZCI6IjAwdWpxcDJmeHhwWWh5U3NBMGg3Iiwic2NwIjpbIm9wZW5pZCIsImVtYWlsIl0sInN1YiI6InZhaWJoYXYudGhha2thci4yMi4xMi45OUBnbWFpbC5jb20ifQ.lD3htT26bUyzRwcorwpVN-1eoYVQIuAWtmbFftgA4QDcfxYeJ3Ek8IwQbv0Q5GSiCL45Vjr30tR9bnIrdfz5qeao9b_OujqhtcFymCPBuxtkoGh9XTAmRdJdrdpcuFnMfFvAm6VtUec4Fqr7piV-Hc26YlNvBGHwXBH9vd6_rzA_iNQRoLxHuM4YWbLUXIpHisbAaSYISx38f5g9skM4Jix-piRCXdSHVl1zrK-1HVxhyYEA0ZlTxyvGhLZtYi6t6Nj5iiU-8g9zVbeu1kDVAhIM9kQBSfxS0XrdHULto_p4Q8045Xt-VbHZVPn54Q10NmDxtOYZhjjK6Vifj9PgDg"
+accessToken="eyJraWQiOiJjcFF2WUpNaElhM1dBNFN2Zy1pSGdtdHJXRndVX2V1WHFsTVpsU3FWSXVrIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULmI3THlYanA5dzduVl9YUFpiSHRBSktFbV84SElOeklFc1FmOWtQb1Fhc0kiLCJpc3MiOiJodHRwczovL2Rldi03MTIzMjEub2t0YXByZXZpZXcuY29tL29hdXRoMi9kZWZhdWx0IiwiYXVkIjoiYXBpOi8vZGVmYXVsdCIsImlhdCI6MTU1MjkyOTMzOSwiZXhwIjoxNTUyOTMyOTM5LCJjaWQiOiIwb2FqcjdnazE3NUN6Q1dCcjBoNyIsInVpZCI6IjAwdWpxcDJmeHhwWWh5U3NBMGg3Iiwic2NwIjpbIm9wZW5pZCIsImVtYWlsIl0sInN1YiI6InZhaWJoYXYudGhha2thci4yMi4xMi45OUBnbWFpbC5jb20ifQ.KeyNeWSgEduQ_KBNtOYQuOWTinpSb2WT-ciLcdoxEDPdFEuG4lsm2n5WA2ekKX82M5qOaFeW_QHlwSIYEQuGo8PXp7iLTeOKamDCAlDTtWpp_fqjGUT_MyzLpj1alsSd7GpbdvhVUYaV0lWQAVlemtxsruxGdcA5nVOWhBOrk4yf2FqpfDUWENr9zRYLzJzsiqD6KnNeiQgQZinyk_148EhdWhco11xoeq-Qzj6pz3T7WOXaTiTP5FL1-nAyrGLs2oz_VsRdXVNZs55OD_t7WG_O3CGQpAN0jL7OT6Fa9r3CJqSEfhDtg-Blsqv4zUjGsuIrbJgtaTdxxk98C18cpw"
 
 # Get user dashboard data
 request="http get http://localhost:8080/api/v1/user/ 'Authorization: \"Bearer $accessToken\"' -v --ignore-stdin"
@@ -24,6 +24,8 @@ request="http get http://localhost:8080/api/v1/user/addfriend?uname=anand44tanma
 eval $request
 
 # Adding new log
-msg="Testing log data"
-request="http --form POST http://localhost:8080/api/v1/logs/new msg='$msg' 'Authorization: \"Bearer $accessToken\"' -v --ignore-stdin"
+msg="Random message for testing"
+boolPersonal="false"
+secUsername=""
+request="http --form POST http://localhost:8080/api/v1/logs/new msg='$msg' boolPersonal='$boolPersonal' secUsername='$secUsername' 'Authorization: \"Bearer $accessToken\"' -v --ignore-stdin"
 eval $request
