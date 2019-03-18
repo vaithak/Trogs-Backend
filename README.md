@@ -43,6 +43,3 @@ Backend repository for Trogs application for Oktane Hackathon.
 ### TODO
 
 => Implement search API  
-=> Dockerize application  
-=> Load Balancing between node instances  
-=> Add categories to logs  
