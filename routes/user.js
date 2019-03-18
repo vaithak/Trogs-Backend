@@ -1,7 +1,7 @@
 const express = require("express");
 const router  = express.Router();
-const Logs    = require('./models/logModel');
-const User    = require('./models/userModel');
+const Logs    = require('../models/logModel');
+const User    = require('../models/userModel');
 
 // Send user data (other than his uid), 
 // also send his logs data (excluding sensitive data) by iterating over his logs array.
@@ -10,7 +10,8 @@ router.get("/", (req, res, next) => {
         let jsonResult = {
             "username"     : req.username,
             "thumbnailUrl" : req.thumbnailUrl,
-            "logs"         : results
+            "logs"         : results,
+            "friends"      : req.userFriends
         };
         res.json(jsonResult);
     })
@@ -36,7 +37,7 @@ router.get("/searchuser", (req, res, next) => {
             });
         }
         else{
-            res.json({});
+            res.status(400).send("No such user exists");
         }
     })
     .catch((err) => {
@@ -47,24 +48,32 @@ router.get("/searchuser", (req, res, next) => {
 // Add a user's friend
 router.get("/addfriend", (req, res, next) => {
     let friendUsername = req.query.uname;
-    User.findOne({"username": friendUsername}).then((user) => {
-        if(user){
-            let newFriends = req.userFriends;
-            newFriends.push({
-                username    : friendUsername,
-                thumbnailUrl: user.thumbnailUrl
-            });
-            User.findOneAndUpdate({'uid': req.uid}, {$set: {'friends': notes}}, () => {
-                res.status(200).send("Friend added successfully!");
-            });
-        }
-        else{
-            res.send("No such user exist");
-        }
-    })
-    .catch((err) => {
-        res.status(500).send(err.message);
-    });
+    if(friendUsername == req.username){
+        res.status(400).send("Cannot add self as friend");
+    }
+    else if(req.userFriends.some(el => el.username == friendUsername )){
+        res.status(400).send("Friend already exists");
+    }
+    else{
+        User.findOne({"username": friendUsername}).then((user) => {
+            if(user){
+                let newFriends = req.userFriends;
+                newFriends.push({
+                    username    : friendUsername,
+                    thumbnailUrl: user.thumbnailUrl
+                });
+                User.findOneAndUpdate({'uid': req.uid}, {$set: {'friends': newFriends}}, () => {
+                    res.status(200).send("Friend added successfully!");
+                });
+            }
+            else{
+                res.status(400).send("No such user exist");
+            }
+        })
+        .catch((err) => {
+            res.status(500).send(err.message);
+        });
+    }
 });
 
 module.exports = router;
