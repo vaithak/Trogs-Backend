@@ -7,10 +7,19 @@ const User    = require('../models/userModel');
 // also send his logs data (excluding sensitive data) by iterating over his logs array.
 router.get("/", (req, res, next) => {
     Logs.find({"uniqRefId": {"$in": req.userLogs}}).then((results) => {
+        let sendResults = results.map(element => ({
+            'completeLog'  : element.completeLog,
+            'amount'       : element.amount,
+            'msgRefId'     : element.msgRefId,
+            'title'        : element.title,
+            'uniqueRefId'  : element.uniqRefId,
+            'boolPersonal' : element.boolPersonal,
+            'secUsername'  : element.secUsername
+        }));
         let jsonResult = {
             "username"     : req.username,
             "thumbnailUrl" : req.thumbnailUrl,
-            "logs"         : results,
+            "logs"         : sendResults,
             "friends"      : req.userFriends
         };
         res.json(jsonResult);
