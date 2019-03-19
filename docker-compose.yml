@@ -1,0 +1,36 @@
+version: '3.2'
+
+services:
+  nodeserver1:
+    build: ./Backend
+    tty: true
+  
+  nodeserver2:
+    build: ./Backend
+    tty: true
+
+  worker1:
+    build: ./Worker
+    tty: true
+  
+  worker2:
+    build: ./Worker
+    tty: true
+  
+  worker3:
+    build: ./Worker
+    tty: true
+
+  nginx:
+    build: ./LoadBalancer
+    tty: true
+    depends_on:
+      - nodeserver1
+      - nodeserver2
+    ports:
+      - "8080:8080"
+  
+networks:
+  default:
+    external:
+      name: trogsNetwork

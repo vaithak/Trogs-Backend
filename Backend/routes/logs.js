@@ -36,7 +36,7 @@ router.post("/new", (req,res,next) => {
         res.status(400).send("Inalid secondary username!");
     }
     else{
-        amqp.connect('amqp://localhost', (err, conn) => {
+        amqp.connect('amqp://dockerdbsetup_messagebroker_1', (err, conn) => {
             if(err){
                 res.status(500).send(err.message);
             }

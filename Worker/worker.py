@@ -50,7 +50,7 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag = method.delivery_tag)
 
 # Connect to Rabbitmqserver and create a channel
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host='dockerdbsetup_messagebroker_1'))
 channel = connection.channel()
 
 # Declaring queue with durability enabled

@@ -1,0 +1,27 @@
+version: '3.2'
+
+services:
+  mongo:
+    image: mongo
+    env_file: .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - '27017:27017'
+    volumes:
+     - ./scripts/:/docker-entrypoint-initdb.d
+
+  messagebroker:
+    image: rabbitmq:3
+    ports:
+      - "5671:5671"
+      - "5672:5672"
+      - "25672:25672"
+      - "15671:15671"
+      - "15672:15672"
+
+networks:
+  default:
+    external:
+      name: trogsNetwork
