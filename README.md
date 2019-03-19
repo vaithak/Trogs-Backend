@@ -2,19 +2,17 @@
 Backend repository for Trogs application for Oktane Hackathon.
 
 ### How to setup ?
-  1) Clone this repo and run -> `npm install`.  
-  2) Download config.js into this cloned folder from [here](https://send.firefox.com/download/dfa07d06c5/#6c9cxmZbCZD9mJQg6x7ueQ)  
-  3) Start mongodb instance by `sudo mongod` command.  
-  4) Run mongo command in another terminal and then run these commands at the first time, see DB_USER and DB_PWD from config.js    
+  1) Clone this repo.  
+  2) Download config.js into the cloned Backend folder from [here](https://send.firefox.com/download/ef88481bdf/#qs6Yqrx2wuNzP2VmkcJCug)  
+  3) Download config.ini into the cloned Worker folder from [here](https://send.firefox.com/download/b515d19690/#8jJPYqWjF0WzsoU5EDTa0g)  
+  4) Download config.env into the clone DockerDBSetup folder from [here](https://send.firefox.com/download/c7ef58a77a/#vvyhUKCYtdIj9-LrzthCeg).  
+  5) Run 
   ```
-    use trogsDb
-    db.createUser({
-       user: "DB_USER",
-       pwd:  "DB_PWD",
-       roles: ["readWrite", "dbAdmin"]
-    })
- ```  
- 5) Now you can close the mongo terminal but make sure the mongo server is running, i.e the mongod service.  
+    $ docker network create trogsNetwork  
+  ```
+  6) Then `cd` into DockerDBSetup folder and run `docker-compose up`  
+  7) Then open a new terminal and cd back into the main folder and again run `docker-compose up`.   
+  8) Setup Complete :thumbsup:  
 
 ### Usage: 
 
