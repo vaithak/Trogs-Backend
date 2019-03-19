@@ -5,7 +5,7 @@ Backend repository for Trogs application for Oktane Hackathon.
   1) Clone this repo.  
   2) Download config.js into the cloned Backend folder from [here](https://send.firefox.com/download/ef88481bdf/#qs6Yqrx2wuNzP2VmkcJCug)  
   3) Download config.ini into the cloned Worker folder from [here](https://send.firefox.com/download/b515d19690/#8jJPYqWjF0WzsoU5EDTa0g)  
-  4) Download config.env into the clone DockerDBSetup folder from [here](https://send.firefox.com/download/c7ef58a77a/#vvyhUKCYtdIj9-LrzthCeg).  
+  4) Download config.env into the cloned DockerDBSetup folder from [here](https://send.firefox.com/download/c7ef58a77a/#vvyhUKCYtdIj9-LrzthCeg).  
   5) Run 
   ```
     $ docker network create trogsNetwork  
@@ -15,6 +15,8 @@ Backend repository for Trogs application for Oktane Hackathon.
   8) Setup Complete :thumbsup:  
 
 ### Usage: 
+
+### Currently API's are not documented but you can see their example usage in test.sh file.  
 
 **Overview**  
 * From frontend an accessToken will be sent in Header of each request, then Authorization handler middleware as defined in auth.js file check if the request is valid and put the JWT of the user as returned by Okta in to req.jwt and similarly for email and uid.  
