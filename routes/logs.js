@@ -12,6 +12,7 @@ Logs.createMapping(function(err){
   }
 });
 
+//Only for testing purposes
 var stream = Logs.synchronize();
 var count =0 ;
 
@@ -24,10 +25,15 @@ stream.on('close',function(){
 stream.on('error',function(){
   console.log(err);
 });
-
+//search a query string in log contents
 router.post("/search",function(req,res,next){
-  
-})
+  Logs.search(
+    { completeLog: req.body.queryString}, function(err,results){
+      if(err) return next(err);
+      var data = results.hits.hits;
+      res.status(200).send(data);
+    });
+});
 // Delete a user's log if it's present else do nothing
 router.get("/delete", (req, res, next) => {
     let uniqRefId = req.query.id;
