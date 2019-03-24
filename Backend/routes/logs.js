@@ -3,6 +3,37 @@ const router  = express.Router();
 const Logs    = require("../models/logModel");
 const amqp    = require("amqplib/callback_api");
 
+Logs.createMapping(function(err){
+  if(err){
+    console.log("error in mapping",err);
+  }
+  else{
+    console.log("Mapping doene",mapping); //remove to disable test
+  }
+});
+
+//Only for testing purposes
+var stream = Logs.synchronize();
+var count =0 ;
+
+stream.on('data',function(){
+  count++;
+});
+stream.on('close',function(){
+  console.log("Index logs= "+count);
+});
+stream.on('error',function(){
+  console.log(err);
+});
+//search a query string in log contents
+router.post("/search",function(req,res,next){
+  Logs.search(
+    { completeLog: req.body.queryString}, function(err,results){
+      if(err) return next(err);
+      var data = results.hits.hits;
+      res.status(200).send(data);
+    });
+});
 // Delete a user's log if it's present else do nothing
 router.get("/delete", (req, res, next) => {
     let uniqRefId = req.query.id;
