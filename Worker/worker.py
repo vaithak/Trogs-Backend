@@ -61,5 +61,5 @@ print(' [*] Waiting for messages. To exit press CTRL+C')
 channel.basic_qos(prefetch_count=1)
 
 # Start consuming requests from broker
-channel.basic_consume(callback, queue='task_queue')
+channel.basic_consume(on_message_callback=callback, queue='task_queue')
 channel.start_consuming()
