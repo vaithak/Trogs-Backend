@@ -3,13 +3,73 @@ const router  = express.Router();
 const Logs    = require("../models/logModel");
 const amqp    = require("amqplib/callback_api");
 
-Logs.createMapping(function(err){
-  if(err){
-    console.log("error in mapping",err);
-  }
-  else{
-    console.log("Mapping doene",mapping); //remove to disable test
-  }
+// Logs.createMapping(function(err){
+//   if(err){
+//     console.log("error in mapping",err);
+//   }
+//   else{
+//     console.log("Mapping doene",mapping); //remove to disable test
+//   }
+// });
+
+
+
+Logs.createMapping({
+    "settings": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+        "analysis": {
+            "filter": {
+                "nGram_filter": {
+                    "type": "nGram",
+                    "min_gram": 2,
+                    "max_gram": 20,
+                    "token_chars": [
+                        "letter",
+                        "digit",
+                        "punctuation",
+                        "symbol"
+                    ]
+                }
+            },
+            "analyzer": {
+                "nGram_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "whitespace",
+                    "filter": [
+                        "lowercase",
+                        "asciifolding",
+                        "nGram_filter"
+                    ]
+                },
+                "whitespace_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "whitespace",
+                    "filter": [
+                        "lowercase",
+                        "asciifolding"
+                    ]
+                }
+            }
+        }
+    },
+    "mappings": {
+        "logs": {
+            "_all": {
+                "analyzer": "nGram_analyzer",
+                "search_analyzer": "whitespace_analyzer"
+            },
+            "properties":{"msgRefId":{"type":"text"},"genUserId":{"type":"text"},"boolPersonal":{"type":"boolean"},"secUsername":{"type":"text"},"title":{"type":"text"},"amount":{"type":"double"},"completeLog":{"type":"text"},"category":{"type":"text"}}
+        }
+    }
+}, function(err, mapping) {
+    if (err) {
+        console.log('error creating mapping (you can safely ignore this)');
+        console.log(err);
+    } else {
+        console.log('mapping created!');
+        console.log(mapping);
+    }
 });
 
 //Only for testing purposes

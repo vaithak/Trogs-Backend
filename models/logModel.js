@@ -18,5 +18,6 @@ logsSchema.plugin(mongoosastic,{
   hosts:[
     'localhost:9200'
   ]
+});
 const Logs = mongoose.model('logs', logsSchema);
 module.exports = Logs;
