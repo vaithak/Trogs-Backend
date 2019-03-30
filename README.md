@@ -3,9 +3,9 @@ Backend repository for Trogs application for Oktane Hackathon.
 
 ### How to setup ?
   1) Clone this repo.  
-  2) Download config.js into the cloned Backend folder from [here](https://send.firefox.com/download/ef88481bdf/#qs6Yqrx2wuNzP2VmkcJCug)  
-  3) Download config.ini into the cloned Worker folder from [here](https://send.firefox.com/download/b515d19690/#8jJPYqWjF0WzsoU5EDTa0g)  
-  4) Download config.env into the cloned DockerDBSetup folder from [here](https://send.firefox.com/download/c7ef58a77a/#vvyhUKCYtdIj9-LrzthCeg).  
+  2) Download config.js into the cloned Backend folder from [here](https://send.firefox.com/download/dd1525fb8b6504f1/#le5vLtlkm4nrgnVXc6Ko7g)  
+  3) Download config.ini into the cloned Worker folder from [here](https://send.firefox.com/download/3a24ba5df3ba0528/#HOEaruAARTwdf7qUyjrBiA)  
+  4) Download config.env into the cloned DockerDBSetup folder from [here](https://send.firefox.com/download/d9f7ac316d9ec068/#414zkwjjcivZ6HGTl-5SAA).  
   5) Run 
   ```
     $ docker network create trogsNetwork  
