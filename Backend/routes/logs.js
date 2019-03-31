@@ -71,7 +71,7 @@ stream.on('data',function(){
 stream.on('close',function(){
   console.log("Index logs= "+count);
 });
-stream.on('error',function(){
+stream.on('error',function(err){
   console.log(err);
 });
 //search a query string in log contents

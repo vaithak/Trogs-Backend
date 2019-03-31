@@ -16,7 +16,7 @@ const logsSchema = new Schema({
 });
 logsSchema.plugin(mongoosastic,{
   hosts:[
-    'localhost:9200'
+    'elasticsearch:9200'
   ]
 });
 

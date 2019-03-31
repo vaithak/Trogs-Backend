@@ -32,7 +32,7 @@ def handleRequest(msgJSON):
         'uniqRefId'   : uniqRefId,
         'completeLog' : msgJSON['logData'],
         'boolPersonal': boolPersonal,
-        'genUserid'   : msgJSON['uid'],
+        'genUserId'   : msgJSON['uid'],
         'secUsername' : msgJSON['secUsername'],
         'title'       : title,
         'amount'      : amount,
