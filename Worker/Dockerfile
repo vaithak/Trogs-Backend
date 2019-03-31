@@ -6,4 +6,5 @@ RUN pip install pika
 RUN pip install bson
 RUN pip install configparser
 RUN pip install pymongo
+RUN pip install elasticsearch
 CMD [ "python", "./worker.py" ]
