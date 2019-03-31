@@ -70,10 +70,7 @@ router.post("/search",function(req,res,next){
             "query": { 
               "bool": { 
                 "must": [
-                  { "match": { "completeLog":req.body.queryString}}
-                ],
-                "filter": [ 
-                  { "term":  { "genUserId": req.uid }}, 
+                  { "match_phrase_prefix": { "completeLog":req.body.queryString}}
                 ]
               }
             }
@@ -83,13 +80,8 @@ router.post("/search",function(req,res,next){
             res.status(500).send(error.message);
           }
           else {
-            console.log("--- Response ---");
-            console.log(response);
-            console.log("--- Hits ---");
-            response.hits.hits.forEach(function(hit){
-              console.log(hit);
-            })
-            res.status(200).send(response.hits.hits);
+            let data = response.hits.hits.filter(result => result['_source']['genUserId'] == req.uid);
+            res.status(200).send(data);
           }
     });
 });

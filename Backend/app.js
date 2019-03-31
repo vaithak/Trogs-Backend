@@ -15,14 +15,14 @@ client.indices.create({
     "mappings": {
       "Logs": {
           "properties":{
-            "msgRefId":{"type":"string", "index": "not_analyzed"},
-            "genUserId":{"type":"string", "index": "not_analyzed"},
+            "msgRefId":{"type":"text", "index": "not_analyzed"},
+            "genUserId":{"type":"text", "index": "not_analyzed"},
             "boolPersonal":{"type":"boolean", "index": "not_analyzed"},
-            "secUsername":{"type":"string"},
-            "title":{"type":"string"},
-            "amount":{"type":"double"},
-            "completeLog":{"type":"string"},
-            "category":{"type":"string"}
+            "secUsername":{"type":"text", "index": "not_analyzed"},
+            "title":{"type":"text", "analyzer": "english"},
+            "amount":{"type":"double", "index": "analyzed"},
+            "completeLog":{"type":"text", "analyzer": "english"},
+            "category":{"type":"text", "index": "not_analyzed"}
           }
       }
     }

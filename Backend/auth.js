@@ -25,7 +25,7 @@ function authenticationRequired(req, res, next) {
   }
 
   const accessToken = match[1];
-
+  console.log(accessToken);
   return oktaJwtVerifier.verifyAccessToken(accessToken)
     .then((jwt) => {
       req.jwt      = jwt;
@@ -58,6 +58,7 @@ function authenticationRequired(req, res, next) {
       });
     })
     .catch((err) => {
+      console.log(err)
       res.status(401).send(err.message);
     });
 }
