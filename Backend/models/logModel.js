@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const mongoosastic = require('mongoosastic');
 const Schema   = mongoose.Schema;
 
 const logsSchema = new Schema({
@@ -13,11 +12,6 @@ const logsSchema = new Schema({
     amount      : {type : Number, required: true},  // Amount credited/Paid -> (-ve), debited/Received -> (+ve)
     completeLog : {type : String, required: true},   // Complete message as it is
     category    : {type : String, required: true, enum: ["Bank", "E-Wallet", "Personal", "Other"]}
-});
-logsSchema.plugin(mongoosastic,{
-  hosts:[
-    'elasticsearch:9200'
-  ]
 });
 
 const Logs = mongoose.model('logs', logsSchema);

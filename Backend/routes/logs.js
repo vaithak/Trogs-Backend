@@ -1,118 +1,127 @@
-const express = require("express");
-const router  = express.Router();
-const Logs    = require("../models/logModel");
-const amqp    = require("amqplib/callback_api");
+const express     = require("express");
+const router      = express.Router();
+const Logs        = require("../models/logModel");
+const amqp        = require("amqplib/callback_api");
+const client      = require('../connection.js');
 
-Logs.createMapping({
-    "settings": {
-        "number_of_shards": 1,
-        "number_of_replicas": 0,
-        "analysis": {
-            "filter": {
-                "nGram_filter": {
-                    "type": "nGram",
-                    "min_gram": 2,
-                    "max_gram": 20,
-                    "token_chars": [
-                        "letter",
-                        "digit",
-                        "punctuation",
-                        "symbol"
-                    ]
-                }
-            },
-            "analyzer": {
-                "nGram_analyzer": {
-                    "type": "custom",
-                    "tokenizer": "standard",
-                    "filter": [
-                        "lowercase",
-                        "asciifolding",
-                        "nGram_filter"
-                    ]
-                },
-                "whitespace_analyzer": {
-                    "type": "custom",
-                    "tokenizer": "standard",
-                    "filter": [
-                        "lowercase",
-                        "asciifolding"
-                    ]
-                }
-            }
-        }
-    },
-    "mappings": {
-        "logs": {
-            "_all": {
-                "analyzer": "nGram_analyzer",
-                "search_analyzer": "whitespace_analyzer"
-            },
-            "properties":{"msgRefId":{"type":"string"},"genUserId":{"type":"string"},"boolPersonal":{"type":"boolean"},"secUsername":{"type":"string"},"title":{"type":"string"},"amount":{"type":"double"},"completeLog":{"type":"string"},"category":{"type":"string"}}
-        }
-    }
-}, function(err, mapping) {
-    if (err) {
-        console.log('error creating mapping (you can safely ignore this)');
-        console.log(err);
-    } else {
-        console.log('mapping created!');
-        console.log(mapping);
-    }
-});
+// Logs.createMapping({
+//     "settings": {
+//         "number_of_shards": 1,
+//         "number_of_replicas": 0,
+//         "analysis": {
+//             "filter": {
+//                 "nGram_filter": {
+//                     "type": "nGram",
+//                     "min_gram": 2,
+//                     "max_gram": 20,
+//                     "token_chars": [
+//                         "letter",
+//                         "digit",
+//                         "punctuation",
+//                         "symbol"
+//                     ]
+//                 }
+//             },
+//             "analyzer": {
+//                 "nGram_analyzer": {
+//                     "type": "custom",
+//                     "tokenizer": "standard",
+//                     "filter": [
+//                         "lowercase",
+//                         "asciifolding",
+//                         "nGram_filter"
+//                     ]
+//                 },
+//                 "whitespace_analyzer": {
+//                     "type": "custom",
+//                     "tokenizer": "standard",
+//                     "filter": [
+//                         "lowercase",
+//                         "asciifolding"
+//                     ]
+//                 }
+//             }
+//         }
+//     },
+//     "mappings": {
+//         "logs": {
+//             "_all": {
+//                 "analyzer": "nGram_analyzer",
+//                 "search_analyzer": "whitespace_analyzer"
+//             },
+//             "properties":{"msgRefId":{"type":"string"},"genUserId":{"type":"string"},"boolPersonal":{"type":"boolean"},"secUsername":{"type":"string"},"title":{"type":"string"},"amount":{"type":"double"},"completeLog":{"type":"string"},"category":{"type":"string"}}
+//         }
+//     }
+// }, function(err, mapping) {
+//     if (err) {
+//         console.log('error creating mapping (you can safely ignore this)');
+//         console.log(err);
+//     } else {
+//         console.log('mapping created!');
+//         console.log(mapping);
+//     }
+// });
 
-//Only for testing purposes
-var stream = Logs.synchronize();
-var count =0
-
-stream.on('data',function(){
-  count++;
-});
-stream.on('close',function(){
-  console.log("Index logs= "+count);
-});
-stream.on('error',function(err){
-  console.log(err);
-});
 //search a query string in log contents
 router.post("/search",function(req,res,next){
-    let query = {
-        "match": { 
-            "completeLog": {
-                "query": req.body.queryString,
-                "fuzziness": "AUTO"
+    client.search({
+        index: 'logss',
+        body: {
+            "query": { 
+              "bool": { 
+                "must": [
+                  { "match": { "completeLog":req.body.queryString}}
+                ],
+                "filter": [ 
+                  { "term":  { "genUserId": req.uid }}, 
+                ]
+              }
             }
-        }
-    };
-    Logs.search(query, function(err,results){
-        if(err){
-            res.status(500).send(err.message);
-        }
-        else{
-            let data = results.hits.hits;
-            res.status(200).send(data);
-        }
+          }
+      },function (error, response,status) {
+          if (error){
+            res.status(500).send(error.message);
+          }
+          else {
+            console.log("--- Response ---");
+            console.log(response);
+            console.log("--- Hits ---");
+            response.hits.hits.forEach(function(hit){
+              console.log(hit);
+            })
+            res.status(200).send(response.hits.hits);
+          }
     });
 });
 
 // Delete a user's log if it's present else do nothing
 router.get("/delete", (req, res, next) => {
     let uniqRefId = req.query.id;
-    Logs.findOne({'uniqRefId': uniqRefId, 'genUserId': req.uid}, function(error, result) {
-        if(error){
-            res.status(500).send({success:false}); 
+    Logs.findOneAndRemove({'uniqRefId': uniqRefId, 'genUserId': req.uid}, (err, removed)=> {
+        if(err){
+            res.status(500).send(err.message);
         }
         else{
-            result.remove(function(err) {
-                if (err) {
-                    res.status(500).send({success:false});
+            client.deleteByQuery({
+                index: 'logss',
+                type: 'Logs',
+                body: {
+                   query: {
+                       match: { 'uniqRefId': uniqRefId }
+                   }
                 }
-                else {
-
-                    res.status(200).send("Log deleted successfully");
+            }, function (error, response) {
+                if(error){
+                    res.status(500).send(err.message);
                 }
-            })
+                else{
+                    res.status(200).send("Deleted log!")
+                }
+            });
         }
+    })
+    .catch((err) => {
+        res.status(500).send(err.message);
     });
 });
 

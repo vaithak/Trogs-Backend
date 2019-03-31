@@ -56,7 +56,7 @@ def handleRequest(msgJSON):
 
     result1 = logsDb.insert_one(saveLogData)
     result2 = usersDb.update_one({"uid": msgJSON['uid']}, {"$set" : {"logs": userLogs} })
-    res     = es.index(index='logss',doc_type='Logs',id=uniqRefId,body=newLogData)
+    res     = es.index(index='logss',doc_type='Logs',body=newLogData)
     print(res['created'])
 
 # Function called as soon as message received from queue
