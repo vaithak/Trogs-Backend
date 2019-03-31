@@ -101,10 +101,10 @@ router.get("/delete", (req, res, next) => {
     Logs.findById(uniqRefId, function(error, result) {
      result.remove(function(err) {
       if (err) {
-         res.json({success:false});
+         res.status(500).send({success:false});
       }
       else {
-         res.json({success:true})
+         res.status(200).send("Log deletsed successfully");
       }
      });
     });
