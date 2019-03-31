@@ -42,4 +42,6 @@ Backend repository for Trogs application for Oktane Hackathon.
 
 ### TODO
 
-=> Implement search API  
+=> Implement search API.  
+=> Deploy.  
+=> Define function for data extraction from SMS in python.  
