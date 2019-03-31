@@ -10,7 +10,7 @@ from elasticsearch import Elasticsearch
 # Initializing configurations
 config = configparser.ConfigParser()
 config.read('config.ini')
-es=Elasticsearch();
+es     = Elasticsearch({'elasticsearch'})
 
 
 # Handling JSON data received in request
@@ -42,11 +42,23 @@ def handleRequest(msgJSON):
         'msgRefId'    : msgRefId,
         'category'    : category
     }
+    newLogData  = {
+        'uniqRefId'   : uniqRefId,
+        'completeLog' : msgJSON['logData'],
+        'boolPersonal': boolPersonal,
+        'genUserId'   : msgJSON['uid'],
+        'secUsername' : msgJSON['secUsername'],
+        'title'       : title,
+        'amount'      : amount,
+        'msgRefId'    : msgRefId,
+        'category'    : category
+    }
 
     result1 = logsDb.insert_one(saveLogData)
     result2 = usersDb.update_one({"uid": msgJSON['uid']}, {"$set" : {"logs": userLogs} })
-    res=es.index(index='logss',doc_type='Logs',id=saveLogData.uniqRefId,body=saveLogData);
+    res     = es.index(index='logss',doc_type='Logs',id=uniqRefId,body=newLogData)
     print(res['created'])
+
 # Function called as soon as message received from queue
 def callback(ch, method, properties, body):
     msgJSON = json.loads(body)

@@ -24,7 +24,7 @@ Logs.createMapping({
             "analyzer": {
                 "nGram_analyzer": {
                     "type": "custom",
-                    "tokenizer": "whitespace",
+                    "tokenizer": "standard",
                     "filter": [
                         "lowercase",
                         "asciifolding",
@@ -33,7 +33,7 @@ Logs.createMapping({
                 },
                 "whitespace_analyzer": {
                     "type": "custom",
-                    "tokenizer": "whitespace",
+                    "tokenizer": "standard",
                     "filter": [
                         "lowercase",
                         "asciifolding"
@@ -76,26 +76,43 @@ stream.on('error',function(err){
 });
 //search a query string in log contents
 router.post("/search",function(req,res,next){
-  Logs.search(
-    { completeLog: req.body.queryString, genUserId:req.uid }, function(err,results){
-      if(err) return next(err);
-      var data = results.hits.hits;
-      res.status(200).send(data);
+    let query = {
+        "match": { 
+            "completeLog": {
+                "query": req.body.queryString,
+                "fuzziness": "AUTO"
+            }
+        }
+    };
+    Logs.search(query, function(err,results){
+        if(err){
+            res.status(500).send(err.message);
+        }
+        else{
+            let data = results.hits.hits;
+            res.status(200).send(data);
+        }
     });
 });
 
 // Delete a user's log if it's present else do nothing
 router.get("/delete", (req, res, next) => {
     let uniqRefId = req.query.id;
-    Logs.findById(uniqRefId, function(error, result) {
-     result.remove(function(err) {
-      if (err) {
-         res.status(500).send({success:false});
-      }
-      else {
-         res.status(200).send("Log deletsed successfully");
-      }
-     });
+    Logs.findOne({'uniqRefId': uniqRefId, 'genUserId': req.uid}, function(error, result) {
+        if(error){
+            res.status(500).send({success:false}); 
+        }
+        else{
+            result.remove(function(err) {
+                if (err) {
+                    res.status(500).send({success:false});
+                }
+                else {
+
+                    res.status(200).send("Log deleted successfully");
+                }
+            })
+        }
     });
 });
 
@@ -142,3 +159,4 @@ router.post("/new", (req,res,next) => {
 });
 
 module.exports = router;
+
