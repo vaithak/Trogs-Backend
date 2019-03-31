@@ -84,21 +84,19 @@ router.post("/search",function(req,res,next){
     });
 });
 
-
 // Delete a user's log if it's present else do nothing
 router.get("/delete", (req, res, next) => {
     let uniqRefId = req.query.id;
-    if (req.userLogs.includes(uniqRefId)){
-        Logs.deleteOne({"uniqRefId": uniqRefId}).then(() => {
-            res.status(200).send("User deleted successfully!");
-        })
-        .catch((err) => {
-            res.status(500).send(err.message);
-        });
-    }
-    else{
-        res.send("No such user exist");
-    }
+    Logs.findById(uniqRefId, function(error, result) {
+     result.remove(function(err) {
+      if (err) {
+         res.status(500).send({success:false});
+      }
+      else {
+         res.status(200).send("Log deletsed successfully");
+      }
+     });
+    });
 });
 
 // Adding a log
