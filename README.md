@@ -41,6 +41,7 @@ Backend repository for Trogs application for Oktane Hackathon.
 4) Then you can manipulate test.sh to test different API's by changing the url and type of request. You can read the [docs](https://httpie.org/doc) of httpie for help.   
 
 ## Response on /api/v1/users/
+```
 {
     "friends": [],
     "logs": [
@@ -58,6 +59,7 @@ Backend repository for Trogs application for Oktane Hackathon.
     "thumbnailUrl": "https://www.gravatar.com/avatar/6a10c16fdcb96765e4ebf1a483e31360?d=robohash",
     "username": "vaibhav.thakkar.22.12.99@gmail.com"
 }
+```  
 
 ### TODO
 
