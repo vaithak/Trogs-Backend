@@ -59,6 +59,46 @@ def handleRequest(msgJSON):
     res     = es.index(index='logss',doc_type='Logs',body=newLogData)
     print(res['created'])
 
+def dataSms(a,merchant):
+        amt=re.findall("[rR][sS]\.?\s[,\d]+\.?\d{0,2}|[iI][nN][rR]\.?\s*[,\d]+\.?\d{0,2}",a)
+        spam=re.search("(offer|promo|discount)",a)
+        spamval=0
+        if spam:
+                spamval=1
+        if spamval==1:
+                return {}
+        transNo=re.findall("((UPI Ref No|No|Txn|Txn#|txn#|txn)\s*[0-9]+)",a);
+        debval=0;
+        credval=0;
+        typDebit=re.search(".debit.",a)
+        if typDebit:
+                debval=1
+        typCredit=re.search(".credit.",a)
+        if typCredit:
+                credval=1
+        dict={"merchantName":merchant,"amount":amt,"spamStatus":spamval,"transNo":transNo[0][0],"Debit":debval,"Credit":credval,"body":a,"category":"bank"}
+        emp={};
+        typWallet=re.search("(wallet|Wallet)",a);
+        if typWallet:
+                wallet=1
+        print(wallet)
+        if debval==1 or credval==1:
+                return dict
+        elif wallet==1:
+                typDebit=0
+                typCredit=0
+                typDebit=re.search(".(paid|deducted).",a)
+                print(typDebit)
+                if typDebit:
+                        debval=1
+                typCredit=re.search(".(added|received).",a)
+                if typCredit:
+                        credval=1
+                dict={"merchantName":merchant,"amount":amt,"spamStatus":spamval,"transNo":transNo[0][0],"Debit":debval,"Credit":credval,"body":a,"category":"wallet"}
+                return dict
+        else:
+                 return emp;
+
 # Function called as soon as message received from queue
 def callback(ch, method, properties, body):
     msgJSON = json.loads(body)
