@@ -23,8 +23,12 @@ def handleRequest(msgJSON):
     title    = "Testing log title: " + msgJSON['logData'][0:6]
     amount   = 1000
     msgRefId = "123456789"
-    category = "Personal"
-
+    category = "Bank"
+    parse = dataSms(msgJSON['logData'],'SBI');
+    if len(parse)==0:
+        return;
+    if parse.spamval==1:
+        return;
     boolPersonal = True if msgJSON['boolPersonal'] == "true" else False
     newId        = bson.objectid.ObjectId()
     uniqRefId    = hashlib.sha3_224(str(newId).encode('utf-8')).hexdigest()
@@ -38,9 +42,9 @@ def handleRequest(msgJSON):
         'genUserId'   : msgJSON['uid'],
         'secUsername' : msgJSON['secUsername'],
         'title'       : title,
-        'amount'      : amount,
-        'msgRefId'    : msgRefId,
-        'category'    : category
+        'amount'      : parse.amount,
+        'msgRefId'    : parse.transNo,
+        'category'    : parse.category
     }
     newLogData  = {
         'uniqRefId'   : uniqRefId,
